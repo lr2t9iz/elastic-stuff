@@ -1,0 +1,33 @@
+[metadata]
+integration = ["windows", "linux"]
+
+[rule]
+author = ["lr2t9iz"]
+description = """
+Detects when a SIEM agent stops sending logs for more than an hour.
+This could indicate connectivity issues, agent misconfigurations, or potential tampering.
+"""
+from = "now-1h"
+index = [".fleet-agents-*"]
+language = "kuery"
+license = "Elastic License v2"
+name = "Elastic Agent Disconnected"
+note = """
+"""
+references = [
+    "https://github.com/netero1010/EDRSilencer",
+]
+risk_score = 89
+rule_id = "a9f1cce7-7b23-4e71-bb48-2b43f938fc89"
+severity = "high"
+tags = [
+    "OS: Windows",
+    "OS: Linux",
+]
+timestamp_override = "event.ingested"
+type = "query"
+
+query = '''
+NOT unenrolled_at:* AND
+last_checkin <= "now-1h" AND last_checkin >= "now-2h"
+'''
