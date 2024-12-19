@@ -3,31 +3,32 @@ integration = ["windows", "linux"]
 
 [rule]
 author = ["lr2t9iz"]
+index = [".fleet-agents-*"]
+type = "query"
+language = "kuery"
+query = '''
+NOT unenrolled_at:* AND 
+last_checkin <= "now-15m" AND last_checkin >= "now-59m"
+'''
+
+name = "Elastic Agent Disconnected"
 description = """
-Detects when a SIEM agent stops sending logs for more than an hour.
+Detects when a SIEM agent stops sending logs for more than 15 minutes.
 This could indicate connectivity issues, agent misconfigurations, or potential tampering.
 """
-from = "now-1h"
-index = [".fleet-agents-*"]
-language = "kuery"
-license = "Elastic License v2"
-name = "Elastic Agent Disconnected"
-note = """
-"""
-references = [
-    "https://github.com/netero1010/EDRSilencer",
-]
-risk_score = 89
-rule_id = "a9f1cce7-7b23-4e71-bb48-2b43f938fc89"
 severity = "high"
-tags = [
-    "OS: Windows",
-    "OS: Linux",
-]
-timestamp_override = "event.ingested"
-type = "query"
+risk_score = 89
+tags = [ "OS: Windows", "OS: Linux" ]
+references = [ "https://github.com/netero1010/EDRSilencer" ]
+setup = """
+check Fleet Agents (Status: Offline)
+"""
+note = """
+Elastic Agent Disconnected
+"""
+max_signals = 100
+rule_name_override = "local_metadata.host.hostname"
+timestamp_override = "last_checkin"
 
-query = '''
-NOT unenrolled_at:* AND
-last_checkin <= "now-1h" AND last_checkin >= "now-2h"
-'''
+from = "now-59m"
+runs_every = 5m
