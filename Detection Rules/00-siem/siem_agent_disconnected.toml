@@ -1,5 +1,8 @@
 [metadata]
-integration = ["windows", "linux"]
+creation_date = "2024/12/15"
+integration = ["Elastic Agent"]
+maturity = "production"
+updated_date = "2024/12/23"
 
 [rule]
 author = ["lr2t9iz"]
@@ -8,7 +11,7 @@ type = "query"
 language = "kuery"
 query = '''
 NOT unenrolled_at:* AND 
-last_checkin <= "now-15m" AND last_checkin >= "now-59m"
+last_checkin >= "now-59m" AND last_checkin <= "now-15m"
 '''
 
 name = "Elastic Agent Disconnected"
@@ -20,15 +23,28 @@ severity = "high"
 risk_score = 89
 tags = [ "OS: Windows", "OS: Linux" ]
 references = [ "https://github.com/netero1010/EDRSilencer" ]
-setup = """
-check Fleet Agents (Status: Offline)
+false_positives = [ "Network outages", "Agent intentionally disabled for maintenance" ]
+setup = """## Setup
+### Windows
+```
+Stop-Service Elastic Agent
+Start-Service Elastic Agent
+```
+### Linux
+```
+sudo systemctl stop elastic-agent
+sudo systemctl start elastic-agent
+
+sudo service elastic-agent stop
+sudo service elastic-agent start
+```
 """
-note = """
-Elastic Agent Disconnected
+note = """## Triage and analysis
+Check Fleet Agents (Status: Offline)
 """
 max_signals = 100
 rule_name_override = "local_metadata.host.hostname"
 timestamp_override = "last_checkin"
 
 from = "now-59m"
-runs_every = 5m
+runs_every = "5m"

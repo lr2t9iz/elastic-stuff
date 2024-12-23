@@ -1,0 +1,44 @@
+[metadata]
+creation_date = "2024/12/23"
+integration = ["Elastic Agent"]
+maturity = "production"
+updated_date = "2024/12/23"
+
+[rule]
+author = ["lr2t9iz"]
+index = [".ds-logs-windows.sysmon_operational-*"]
+type = "query"
+language = "kuery"
+query = '''
+(
+    event.code : "1" AND 
+    process.name:("cmd.exe" OR "powershell.exe" OR "rundll32.exe" OR "regsvr32.exe") AND 
+    NOT process.working_directory:C\:\\*
+) AND NOT (
+    process.parent.name: "process.exe" OR
+    user.name: ("app_user" OR "user_admin") OR
+    process.args: ("scrip.ps1") 
+)
+'''
+
+name = "Execution From Removable Device"
+description = """
+USB, CD Room, ISO File delivering malware via DLL
+"""
+severity = "high"
+risk_score = 89
+tags = [ "OS: Windows" ]
+references = [ "https://thedfirreport.com/2023/04/03/malicious-iso-file-leads-to-domain-wide-ransomware/", "https://www.proofpoint.com/us/blog/threat-insight/bumblebee-is-still-transforming" ]
+false_positives = [ "Installation PC Drivers" ]
+setup = """## Setup
+### Windows
+"""
+note = """## Triage and analysis
+Look for mounted/written Removable Device as possible initial vector 
+"""
+max_signals = 100
+rule_name_override = "local_metadata.host.hostname"
+timestamp_override = "last_checkin"
+
+from = "now-2m"
+runs_every = "2m"

@@ -1,0 +1,37 @@
+[metadata]
+creation_date = "2024/12/15"
+integration = ["Fortinet FortiGate Firewall Logs"]
+maturity = "production"
+updated_date = "2024/12/23"
+
+[rule]
+author = ["lr2t9iz"]
+index = [".ds-logs-fortinet_fortigate.log-*"]
+type = "threshold"
+language = "kuery"
+query = '''
+fortinet.firewall.subtype : "vpn" AND 
+event.code : "0101037121"
+'''
+
+name = "Fortinet AuthFailed VPN Client"
+description = """
+This rule detects multiple failed VPN authentication attempts (event code 0101037121) on Fortinet FortiGate firewalls. It triggers when the same user or VPN tunnel exceeds 8 failed attempts, helping identify potential unauthorized access attempts.
+"""
+severity = "high"
+risk_score = 89
+tags = [ "Firewall", "Fortinet" ]
+references = [ ]
+false_positives = [ ]
+setup = """## Setup
+"""
+note = """## Triage and analysis
+"""
+max_signals = 100
+
+from = "now-15m"
+runs_every = "5m"
+
+[rule.threshold]
+field = ["fortinet.firewall.xauthuser", "fortinet.firewall.vpntunnel"]
+value = 8
