@@ -15,15 +15,24 @@ PUT kbn:api/detection_engine/rules
 )
 """,
 
-  "name": "Windows User Account Creation 2",
+  "name": "Windows User Account Creation",
   "description": """
 Identifies attempts to create a Windows User Account. This is sometimes done by attackers to persist or increase access to a system or domain.
+Detects local user creation on Windows servers, which shouldn't happen in an Active Directory environment. Apply this Sigma Use Case on your Windows server logs and not on your DC logs.
   """,
   "severity": "high",
   "risk_score": 89,
   "tags": [ "OS: Windows" ],
-  "references": [ "https://patrick-bareiss.com/detecting-local-user-creation-in-ad-with-sigma/", "https://github.com/elastic/detection-rules/blob/main/rules/windows/persistence_user_account_creation_event_logs.toml" ],
-  "false_positives": [ "Legitimate local user creations may be done by a system or network administrator. Verify whether this is known behavior in your environment. Local user creations by unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule." ],
+  "references": [
+    "https://raw.githubusercontent.com/elastic/detection-rules/refs/heads/main/rules/windows/persistence_user_account_creation_event_logs.toml",
+    "https://raw.githubusercontent.com/SigmaHQ/sigma/refs/heads/master/rules/windows/builtin/security/win_security_user_creation.yml",
+    "https://patrick-bareiss.com/detecting-local-user-creation-in-ad-with-sigma/"
+  ],
+  "false_positives": [
+    "Legitimate local user creations may be done by a system or network administrator. Verify whether this is known behavior in your environment. Local user creations by unfamiliar users or hosts should be investigated. If known behavior is causing false positives, it can be exempted from the rule.",
+    "Domain Controller Logs",
+    "Local accounts managed by privileged account management tools"
+  ],
   "setup": """
 ## Setup
 """,
@@ -65,6 +74,19 @@ Identifies attempts to create a Windows User Account. This is sometimes done by 
           ]
         }
       ]
+    }
+  ],
+  "related_integrations": [
+    {
+      "package": "elastic_agent",
+      "version": "^2.0.3"
+    }
+  ],
+  "required_fields": [
+    {
+      "name": "event.code",
+      "type": "keyword",
+      "ecs": true
     }
   ]
 }
