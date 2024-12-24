@@ -35,8 +35,7 @@ PUT kbn:api/detection_engine/rules
   "from": "now-135s",
   "interval": "2m",
   "meta": {
-    "from": "15s",
-    "kibana_siem_app_url": "https://kr.kb.eu-west-1.aws.found.io/app/security"
+    "from": "15s"
   },
   
   "threat": [
