@@ -17,7 +17,7 @@ PUT kbn:api/detection_engine/rules
 
   "name": "Windows User Account Creation 2",
   "description": """
-  Identifies attempts to create a Windows User Account. This is sometimes done by attackers to persist or increase access to a system or domain.
+Identifies attempts to create a Windows User Account. This is sometimes done by attackers to persist or increase access to a system or domain.
   """,
   "severity": "high",
   "risk_score": 89,
