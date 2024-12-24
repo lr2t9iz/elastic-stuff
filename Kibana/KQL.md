@@ -1,1 +1,0 @@
-# Kibana Query Language
