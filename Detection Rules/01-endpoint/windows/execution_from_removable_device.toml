@@ -21,7 +21,7 @@ query = '''
 )
 '''
 
-name = "Execution From Removable Device"
+name = "Windows Execution From Removable Device"
 description = """
 USB, CD Room, ISO File delivering malware via DLL
 """
