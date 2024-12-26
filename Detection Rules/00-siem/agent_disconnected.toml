@@ -9,10 +9,7 @@ author = ["lr2t9iz"]
 index = [".fleet-agents-*"]
 type = "query"
 language = "kuery"
-query = '''
-NOT unenrolled_at:* AND 
-last_checkin >= "now-59m" AND last_checkin <= "now-15m"
-'''
+query = """ last_checkin >= "now-59m" AND last_checkin <= "now-15m" """
 
 name = "Elastic Agent Disconnected"
 description = """
