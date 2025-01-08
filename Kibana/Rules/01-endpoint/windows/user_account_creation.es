@@ -1,4 +1,7 @@
-PUT kbn:api/detection_engine/rules
+# "https://raw.githubusercontent.com/SigmaHQ/sigma/refs/heads/master/rules/windows/builtin/security/win_security_user_creation.yml"
+# "https://raw.githubusercontent.com/elastic/detection-rules/refs/heads/main/rules/windows/persistence_user_account_creation_event_logs.toml"
+
+POST kbn:api/detection_engine/rules
 {
   "enabled": true,
 
@@ -16,16 +19,14 @@ PUT kbn:api/detection_engine/rules
 """,
 
   "name": "Windows User Account Creation",
-  "description": """
-Identifies attempts to create a Windows User Account. This is sometimes done by attackers to persist or increase access to a system or domain.
-Detects local user creation on Windows servers, which shouldn't happen in an Active Directory environment. Apply this Sigma Use Case on your Windows server logs and not on your DC logs.
+  "description": """Identifies attempts to create a Windows User Account. This is sometimes done by attackers to persist or increase access to a system or domain.
+Detects local user creation on Windows servers, which shouldn't happen in an Active Directory environment.
+Apply this Sigma Use Case on your Windows server logs and not on your DC logs.
   """,
   "severity": "high",
   "risk_score": 89,
   "tags": [ "OS: Windows" ],
   "references": [
-    "https://raw.githubusercontent.com/elastic/detection-rules/refs/heads/main/rules/windows/persistence_user_account_creation_event_logs.toml",
-    "https://raw.githubusercontent.com/SigmaHQ/sigma/refs/heads/master/rules/windows/builtin/security/win_security_user_creation.yml",
     "https://patrick-bareiss.com/detecting-local-user-creation-in-ad-with-sigma/"
   ],
   "false_positives": [
@@ -33,12 +34,14 @@ Detects local user creation on Windows servers, which shouldn't happen in an Act
     "Domain Controller Logs",
     "Local accounts managed by privileged account management tools"
   ],
-  "setup": """
-## Setup
-""",
-  "note": """
-## Triage and analysis
-""",
+  "setup": """## Setup
+If the activity is unauthorized, disable or remove the newly created account immediately.
+Check for additional persistence mechanisms that the attacker might have established.
+Review and tighten user and group permissions as necessary. Finally, implement or enhance monitoring to detect future unauthorized account creation attempts.""",
+  "note": """## Triage and analysis
+Investigate the origin of the event by identifying the account used to create the new user and the system where the activity occurred.
+Determine if the activity aligns with known administrative tasks or scheduled processes.
+Verify if the account creation was authorized and review associated logs for anomalies, such as simultaneous suspicious events or the use of privileged accounts.""",
   "max_signals": 100,
   
   "from": "now-135s",
@@ -74,19 +77,6 @@ Detects local user creation on Windows servers, which shouldn't happen in an Act
           ]
         }
       ]
-    }
-  ],
-  "related_integrations": [
-    {
-      "package": "elastic_agent",
-      "version": "^2.0.3"
-    }
-  ],
-  "required_fields": [
-    {
-      "name": "event.code",
-      "type": "keyword",
-      "ecs": true
     }
   ]
 }
