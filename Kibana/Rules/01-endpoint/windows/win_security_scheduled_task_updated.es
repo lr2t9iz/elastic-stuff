@@ -11,7 +11,7 @@ POST kbn:api/detection_engine/rules
   "language": "kuery",
   "query": """ event.code: "4702" AND message: (*cmd* OR *powershell* OR *pwsh* OR *wmic* OR *mshta* OR *cscript* OR *wscript* OR *scriptrunner* OR *bash* OR *regsvr32* OR *rundll32* OR *certutil* OR *bitsadmin* OR *scrcons* OR *forfiles* OR *hh* OR *temp* OR *roaming* OR *public* OR *desktop* OR *downloads* OR *programdata* OR perflogs*) """,
 
-  "name": "Windows Suspicious Scheduled Task Update",
+  "name": "Windows Scheduled Task Updated",
   "description": """Detects update to a scheduled task event that contain suspicious keywords.""",
   "severity": "high",
   "risk_score": 89,

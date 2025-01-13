@@ -10,15 +10,9 @@ POST kbn:api/detection_engine/rules
   "index": [ ".ds-logs-system.security-*" ],
   "type": "query",
   "language": "kuery",
-  "query": """
-(
-    event.code: "4720"
-) AND NOT (
-    user.name: ("ANONYMOUS LOGON" OR "other_user_exception")
-)
-""",
+  "query": """ ( event.code: "4720" ) AND NOT ( user.name: ("ANONYMOUS LOGON" OR "other_user_exception") ) """,
 
-  "name": "Windows User Account Creation",
+  "name": "Windows User Account Created",
   "description": """Identifies attempts to create a Windows User Account. This is sometimes done by attackers to persist or increase access to a system or domain.
 Detects local user creation on Windows servers, which shouldn't happen in an Active Directory environment.
 Apply this Sigma Use Case on your Windows server logs and not on your DC logs.
